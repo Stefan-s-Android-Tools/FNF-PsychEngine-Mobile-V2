@@ -200,6 +200,10 @@ class Main extends Sprite
 
 		// shader coords fix
 		FlxG.signals.gameResized.add(function (w, h) {
+			var scale:Float = (FlxG.scaleMode != null && FlxG.scaleMode.gameSize.x > 0) ? (FlxG.scaleMode.gameSize.x / FlxG.width) : Math.min(w / FlxG.width, h / FlxG.height);
+
+			if(fpsVar != null)
+				fpsVar.positionFPS(10, 3, scale);
 		     if (FlxG.cameras != null) {
 			   for (cam in FlxG.cameras.list) {
 				if (cam != null && cam.filters != null)
