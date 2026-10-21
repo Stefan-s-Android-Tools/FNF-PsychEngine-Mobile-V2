@@ -14,6 +14,10 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	private var checkboxGroup:FlxTypedGroup<CheckboxThingie>;
 	private var grpTexts:FlxTypedGroup<AttachedText>;
 
+	#if mobile
+	var backButton:mobile.MobileButton;
+	#end
+
 	private var curOption(get, never):GameplayOption;
 	function get_curOption() return optionsArray[curSelected]; //shorter lol
 
@@ -137,6 +141,11 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 		changeSelection();
 		reloadCheckboxes();
+
+		#if mobile
+		backButton = mobile.MobileButton.back();
+		add(backButton);
+		#end
 	}
 
 	var nextAccept:Int = 5;
@@ -144,6 +153,17 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	var holdValue:Float = 0;
 	override function update(elapsed:Float)
 	{
+		var touchAccept:Bool = false;
+		#if mobile
+		var tapped:Int = mobile.TouchInput.tappedRow(cast grpOptions.members);
+		mobile.TouchInput.consumeTap();
+		if (tapped > -1)
+		{
+			if (tapped == curSelected) touchAccept = true;
+			else changeSelection(tapped - curSelected);
+		}
+		#end
+
 		if (controls.UI_UP_P)
 			changeSelection(-1);
 
@@ -162,7 +182,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 			var usesCheckbox:Bool = (curOption.type == BOOL);
 			if(usesCheckbox)
 			{
-				if(controls.ACCEPT)
+				if(controls.ACCEPT || touchAccept)
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					curOption.setValue((curOption.getValue() == true) ? false : true);
