@@ -74,7 +74,7 @@ class ModsMenuState extends MusicBeatState
 		bg.screenCenter();
 		mobile.WideScreen.fit(bg);
 
-		bgList = FlxSpriteUtil.drawRoundRect(new FlxSprite(40, 40).makeGraphic(340, 440, FlxColor.TRANSPARENT), 0, 0, 340, 440, 15, 15, FlxColor.BLACK);
+		bgList = FlxSpriteUtil.drawRoundRect(new FlxSprite(40 + mobile.WideScreen.offset, 40).makeGraphic(340, 440, FlxColor.TRANSPARENT), 0, 0, 340, 440, 15, 15, FlxColor.BLACK);
 		bgList.alpha = 0.6;
 
 		modsGroup = new FlxTypedGroup<ModItem>();
@@ -175,6 +175,9 @@ class ModsMenuState extends MusicBeatState
 
 			FlxG.autoPause = false;
 			changeSelectedMod();
+			#if mobile
+			add(mobile.MobileButton.back(null, true));
+			#end
 			return super.create();
 		}
 		//
